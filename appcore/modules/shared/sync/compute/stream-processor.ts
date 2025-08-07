@@ -278,7 +278,6 @@ export class StreamProcessor {
     // Fix potentials ascent errors and smooth out ascent speed signal
     streams.ascent_speed = KalmanFilter.apply(streams.ascent_speed, AS_KALMAN_SMOOTHING);
 
-    console.log(streams.ascent_speed);
     return streams;
   }
 
