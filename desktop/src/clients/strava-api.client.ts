@@ -49,15 +49,18 @@ export class StravaApiClient {
         limit: null
       }
     };
+    const limits = headers[StravaApiClient.STRAVA_RATELIMIT_LIMIT_HEADER]
+      ? (headers[StravaApiClient.STRAVA_RATELIMIT_LIMIT_HEADER] as string).split(",")
+      : null;
+    const usages = headers[StravaApiClient.STRAVA_RATELIMIT_USAGE_HEADER]
+      ? (headers[StravaApiClient.STRAVA_RATELIMIT_USAGE_HEADER] as string).split(",")
+      : null;
 
-    const limits = (headers[StravaApiClient.STRAVA_RATELIMIT_LIMIT_HEADER] as string).split(",");
-    const usages = (headers[StravaApiClient.STRAVA_RATELIMIT_USAGE_HEADER] as string).split(",");
+    rateLimits.instant.limit = limits ? parseInt(limits[0].trim(), 10) : 600;
+    rateLimits.instant.usage = usages ? parseInt(usages[0].trim(), 10) : 1;
 
-    rateLimits.instant.limit = parseInt(limits[0].trim(), 10);
-    rateLimits.instant.usage = parseInt(usages[0].trim(), 10);
-
-    rateLimits.daily.limit = parseInt(limits[1].trim(), 10);
-    rateLimits.daily.usage = parseInt(usages[1].trim(), 10);
+    rateLimits.daily.limit = limits ? parseInt(limits[1].trim(), 10) : 6000;
+    rateLimits.daily.usage = usages ? parseInt(usages[1].trim(), 10) : 1;
 
     return rateLimits;
   }
